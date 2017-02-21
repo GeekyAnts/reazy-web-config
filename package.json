@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GeekyAnts/reazy-auth.git"
+    "url": "https://github.com/GeekyAnts/reazy-web-config.git"
   },
   "keywords": [
     "reazy",
