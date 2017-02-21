@@ -30,6 +30,15 @@ function importService(filename, name, moduleName) {
   }
 }
 
+function createEnvFile(filename) {
+  if (!fs.existsSync(filename)) {
+    const fileContents = `{
+  "TEST_CONFIG": "test"
+}`;
+    fs.writeFileSync(filename, fileContents, {encoding: 'utf8'});
+  }
+}
+
 module.exports = generators.Base.extend({
   constructor: function () {
     generators.Base.apply(this, arguments);
@@ -52,10 +61,12 @@ module.exports = generators.Base.extend({
 
   writing: function () {
     const appJsPath = this.destinationPath('src/app.js');
+    const envPath = this.destinationPath('.env.json');
 
     importService(appJsPath, 'reazyWebConfig', 'reazy-web-config');
     useService(appJsPath, `app.use(reazyWebConfig({
   env: require('../.env.json')
 }), 'reazyWebConfig')`);
+    createEnvFile(envPath);
   }
 });
