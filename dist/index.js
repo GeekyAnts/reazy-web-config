@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -7,9 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function (params) {
   return function (serviceName) {
     var app = this;
-
-    // const env = require(params.envPath);
-    console.log('env', params.env);
 
     app[serviceName] = params.env;
 
