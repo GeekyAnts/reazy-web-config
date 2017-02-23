@@ -1,43 +1,7 @@
-var generators = require('yeoman-generator');
-var fs = require('fs-extra');
-var path = require('path');
-var transform = require('../../lib/transform');
-
-function useService(filename, statement) {
-  let fileContents = fs.readFileSync(filename, {encoding: 'utf8'}).split('\n');
-  let indexOfApp = fileContents.length - 1;
-  fileContents.filter(function (word, index) {
-    if (word.match(/reazy\(\)/g)) {
-      indexOfApp = index;
-      return true;
-    }
-    return false;
-  });
-  fileContents.splice(indexOfApp + 1, 0, '');
-  fileContents.splice(indexOfApp + 2, 0, statement);
-  fileContents = fileContents.join('\n');
-  fs.writeFileSync(filename, fileContents, {encoding: 'utf8'});
-}
-
-function importService(filename, name, moduleName) {
-  if (fs.existsSync(filename)) {
-    var content = fs.readFileSync(filename).toString();
-    var ast = transform.parse(content);
-
-    transform.addImport(ast, name, moduleName);
-
-    fs.writeFileSync(filename, transform.print(ast));
-  }
-}
-
-function createEnvFile(filename) {
-  if (!fs.existsSync(filename)) {
-    const fileContents = `{
-  "TEST_CONFIG": "test"
-}`;
-    fs.writeFileSync(filename, fileContents, {encoding: 'utf8'});
-  }
-}
+import generators from 'yeoman-generator';
+import fs from 'fs-extra';
+import path from 'path';
+import { addEnv, addImport, addUse } from 'reazy-setup-helper';
 
 module.exports = generators.Base.extend({
   constructor: function () {
@@ -60,13 +24,10 @@ module.exports = generators.Base.extend({
   },
 
   writing: function () {
-    const appJsPath = this.destinationPath('src/app.js');
-    const envPath = this.destinationPath('.env.json');
-
-    importService(appJsPath, 'reazyWebConfig', 'reazy-web-config');
-    useService(appJsPath, `app.use(reazyWebConfig({
+    addImport('reazy-web-config', 'reazyWebConfig');
+    addUse(`app.use(reazyWebConfig({
   env: require('../.env.json')
 }), 'reazyWebConfig')`);
-    createEnvFile(envPath);
+    addEnv('TEST_CONFIG', 'test');
   }
 });

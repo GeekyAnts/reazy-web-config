@@ -1,47 +1,24 @@
 'use strict';
 
-var generators = require('yeoman-generator');
-var fs = require('fs-extra');
-var path = require('path');
-var transform = require('../../lib/transform');
+var _yeomanGenerator = require('yeoman-generator');
 
-function useService(filename, statement) {
-  var fileContents = fs.readFileSync(filename, { encoding: 'utf8' }).split('\n');
-  var indexOfApp = fileContents.length - 1;
-  fileContents.filter(function (word, index) {
-    if (word.match(/reazy\(\)/g)) {
-      indexOfApp = index;
-      return true;
-    }
-    return false;
-  });
-  fileContents.splice(indexOfApp + 1, 0, '');
-  fileContents.splice(indexOfApp + 2, 0, statement);
-  fileContents = fileContents.join('\n');
-  fs.writeFileSync(filename, fileContents, { encoding: 'utf8' });
-}
+var _yeomanGenerator2 = _interopRequireDefault(_yeomanGenerator);
 
-function importService(filename, name, moduleName) {
-  if (fs.existsSync(filename)) {
-    var content = fs.readFileSync(filename).toString();
-    var ast = transform.parse(content);
+var _fsExtra = require('fs-extra');
 
-    transform.addImport(ast, name, moduleName);
+var _fsExtra2 = _interopRequireDefault(_fsExtra);
 
-    fs.writeFileSync(filename, transform.print(ast));
-  }
-}
+var _path = require('path');
 
-function createEnvFile(filename) {
-  if (!fs.existsSync(filename)) {
-    var fileContents = '{\n  "TEST_CONFIG": "test"\n}';
-    fs.writeFileSync(filename, fileContents, { encoding: 'utf8' });
-  }
-}
+var _path2 = _interopRequireDefault(_path);
 
-module.exports = generators.Base.extend({
+var _reazySetupHelper = require('reazy-setup-helper');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _yeomanGenerator2.default.Base.extend({
   constructor: function constructor() {
-    generators.Base.apply(this, arguments);
+    _yeomanGenerator2.default.Base.apply(this, arguments);
   },
 
   initializing: function initializing() {
@@ -54,16 +31,13 @@ module.exports = generators.Base.extend({
     }
 
     this.props = {
-      name: this.pkg.name || process.cwd().split(path.sep).pop()
+      name: this.pkg.name || process.cwd().split(_path2.default.sep).pop()
     };
   },
 
   writing: function writing() {
-    var appJsPath = this.destinationPath('src/app.js');
-    var envPath = this.destinationPath('.env.json');
-
-    importService(appJsPath, 'reazyWebConfig', 'reazy-web-config');
-    useService(appJsPath, 'app.use(reazyWebConfig({\n  env: require(\'../.env.json\')\n}), \'reazyWebConfig\')');
-    createEnvFile(envPath);
+    (0, _reazySetupHelper.addImport)('reazy-web-config', 'reazyWebConfig');
+    (0, _reazySetupHelper.addUse)('app.use(reazyWebConfig({\n  env: require(\'../.env.json\')\n}), \'reazyWebConfig\')');
+    (0, _reazySetupHelper.addEnv)('TEST_CONFIG', 'test');
   }
 });
