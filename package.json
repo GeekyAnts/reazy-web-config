@@ -33,7 +33,7 @@
   "dependencies": {
     "chalk": "^1.1.1",
     "fs-extra": "^2.0.0",
-    "reazy-setup-helper": "^0.0.3",
+    "reazy-setup-helper": "^0.0.5",
     "yeoman-generator": "^0.24.1"
   }
 }
