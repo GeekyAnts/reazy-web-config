@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.remove = exports.add = undefined;
 
 var _reazySetupHelper = require('reazy-setup-helper');
 
@@ -12,11 +13,13 @@ var _path2 = _interopRequireDefault(_path);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-  add: function add() {
-    (0, _reazySetupHelper.runGenerator)(_path2.default.join(__dirname, '..', 'generators', 'add'), 'reazy-web-config-add');
-  },
-  remove: function remove() {
-    (0, _reazySetupHelper.runGenerator)(_path2.default.join(__dirname, '..', 'generators', 'remove'), 'reazy-web-config-remove');
-  }
+var add = function add(cb) {
+  (0, _reazySetupHelper.runGenerator)(_path2.default.join(__dirname, 'generators', 'add'), 'reazy-web-config-add', cb);
 };
+
+var remove = function remove(cb) {
+  (0, _reazySetupHelper.runGenerator)(_path2.default.join(__dirname, 'generators', 'remove'), 'reazy-web-config-remove', cb);
+};
+
+exports.add = add;
+exports.remove = remove;

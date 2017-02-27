@@ -36,8 +36,8 @@ module.exports = _yeomanGenerator2.default.Base.extend({
   },
 
   writing: function writing() {
-    (0, _reazySetupHelper.addImport)('reazy-web-config', 'reazyWebConfig');
-    (0, _reazySetupHelper.addUse)('app.use(reazyWebConfig({\n  env: require(\'../.env.json\')\n}), \'reazyWebConfig\')');
+    (0, _reazySetupHelper.addImport)('reazy-web-config', 'config');
+    (0, _reazySetupHelper.addUse)('app.use(config({\n  env: require(\'../.env.json\')\n}), \'config\')');
     (0, _reazySetupHelper.addEnv)('TEST_CONFIG', 'test');
   }
 });

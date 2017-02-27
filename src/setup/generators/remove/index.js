@@ -1,7 +1,7 @@
-import generators from 'yeoman-generator';
-import fs from 'fs-extra';
-import path from 'path';
-import { addEnv, addImport, addUse } from 'reazy-setup-helper';
+var generators = require('yeoman-generator');
+var fs = require('fs');
+var path = require('path');
+import { removeImport, removeUse } from 'reazy-setup-helper';
 
 module.exports = generators.Base.extend({
   constructor: function () {
@@ -24,10 +24,7 @@ module.exports = generators.Base.extend({
   },
 
   writing: function () {
-    addImport('reazy-web-config', 'reazyWebConfig');
-    addUse(`app.use(reazyWebConfig({
-  env: require('../.env.json')
-}), 'reazyWebConfig')`);
-    addEnv('TEST_CONFIG', 'test');
+    removeUse('reazy-web-config');
+    removeImport('reazy-web-config');
   }
 });
